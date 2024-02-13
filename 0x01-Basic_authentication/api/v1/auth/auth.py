@@ -12,7 +12,11 @@ class Auth():
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ check if resource require auth or not
         """
-        if path is None or len(excluded_paths) == 0 or excluded_paths is None:
+        if path is None:
+            return True
+        elif excluded_paths is None:
+            return True
+        elif len(excluded_paths) == 0:
             return True
         if path[-1] != '/':
             normalizedPath = path + '/'
