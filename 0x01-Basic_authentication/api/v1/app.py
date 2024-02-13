@@ -27,6 +27,8 @@ elif os.environ.get('AUTH_TYPE') == 'basic_auth':
 
 @app.before_request
 def filter_paths():
+    """ Forbidden handler
+    """
     if auth is None:
         return
     if not auth.require_auth(request.path, excluded_paths):
