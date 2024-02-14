@@ -4,6 +4,7 @@
 from flask import request
 from typing import List, TypeVar
 import os
+from fnmatch import fnmatch
 
 
 class Auth():
@@ -13,31 +14,12 @@ class Auth():
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ check if resource require auth or not
         """
-        if path is None:
-            return True
-        elif excluded_paths is None:
-            return True
-        elif len(excluded_paths) == 0:
+        if not path or not excluded_paths:
             return True
         if path[-1] != '/':
-            normalizedPath = path + '/'
-        else:
-            normalizedPath = path
-        for item in excluded_paths:
-            i = 0
-            for char in item:
-                if char == normalizedPath[i]:
-                    i = i + 1
-                    continue
-                elif len(item) == i + 1 and char == '*':
-                    return False
-                else:
-                    return True
-        if normalizedPath in excluded_paths:
-            return False
-        else:
-            return True
-
+            path += '/'
+        return not [n for n in excluded_paths if fnmatch(path, n)]
+    
     def authorization_header(self, request=None) -> str:
         """ get the Authorization header
         """
