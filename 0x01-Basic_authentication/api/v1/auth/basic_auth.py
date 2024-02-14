@@ -5,6 +5,7 @@ from api.v1.auth.auth import Auth
 from typing import List, TypeVar
 import binascii
 import base64
+from api.v1.views.users import User
 
 
 class BasicAuth(Auth):
@@ -57,3 +58,18 @@ class BasicAuth(Auth):
             email = decoded_base64_authorization_header[0:idx]
             pwd = decoded_base64_authorization_header[idx+1:]
             return email, pwd
+
+    def user_object_from_credentials(
+            self, user_email: str, user_pwd: str
+            ) -> TypeVar('User'):
+        """get user from credentials
+        """
+        if user_email is None or type(user_email) is not str:
+            return None
+        if user_pwd is None or type(user_pwd) is not str:
+            return None
+        found_users = User.search({'email': user_email})
+        for found_user in found_users:
+            if found_user.is_valid_password(user_pwd) is True:
+                return found_user
+        return None
