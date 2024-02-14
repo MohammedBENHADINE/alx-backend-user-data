@@ -73,3 +73,26 @@ class BasicAuth(Auth):
             if found_user.is_valid_password(user_pwd) is True:
                 return found_user
         return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """retrieve user
+        """
+        hdr = Auth.authorization_header(request)
+        print("test")
+        print(hdr)
+        if hdr is None:
+            return None
+        else:
+            tocken = extract_base64_authorization_header(hdr)
+            print(tocken)
+            if tocken is None:
+                return None
+            else:
+                decoded = decode_base64_authorization_header(tocken)
+                print(decoded)
+                if decoded is None:
+                    return None
+                else:
+                    email, pwd = extract_user_credentials(decoded)
+                    print(email, pwd)
+                    return user_object_from_credentials(email, pwd)
