@@ -22,6 +22,16 @@ class Auth():
             normalizedPath = path + '/'
         else:
             normalizedPath = path
+        for item in excluded_paths:
+            i = 0
+            for char in item:
+                if char == normalizedPath[i]:
+                    i = i + 1
+                    continue
+                elif len(item) == i + 1 and char == '*':
+                    return False
+                else:
+                    return True
         if normalizedPath in excluded_paths:
             return False
         else:
