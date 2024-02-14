@@ -77,22 +77,17 @@ class BasicAuth(Auth):
     def current_user(self, request=None) -> TypeVar('User'):
         """retrieve user
         """
-        hdr = Auth.authorization_header(request)
-        print("test")
-        print(hdr)
+        hdr = self.authorization_header(request)
         if hdr is None:
             return None
         else:
-            tocken = extract_base64_authorization_header(hdr)
-            print(tocken)
+            tocken = self.extract_base64_authorization_header(hdr)
             if tocken is None:
                 return None
             else:
-                decoded = decode_base64_authorization_header(tocken)
-                print(decoded)
+                decoded = self.decode_base64_authorization_header(tocken)
                 if decoded is None:
                     return None
                 else:
-                    email, pwd = extract_user_credentials(decoded)
-                    print(email, pwd)
-                    return user_object_from_credentials(email, pwd)
+                    email, pwd = self.extract_user_credentials(decoded)
+                    return self.user_object_from_credentials(email, pwd)
